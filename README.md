@@ -1,2 +1,1 @@
-# Aplicacion_Nonima_PHP
-version del profe php puro
+# PHP_Avanzado_Nomina
