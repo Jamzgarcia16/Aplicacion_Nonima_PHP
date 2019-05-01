@@ -179,7 +179,6 @@ function comprobar() {
 
 function comprobar2() {
 	$.ajax({
-		
 		url: "revisa_menu.php",
 		async: true,
 		cache: true,
