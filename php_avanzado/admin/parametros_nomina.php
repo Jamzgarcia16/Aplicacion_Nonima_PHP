@@ -1,25 +1,16 @@
-<h1 class="h3 mb-0 text-gray-800">ADMINISTRACION DE PARAMETROS NOMINA</h1>
+<h1 class="h3 mb-0 text-gray-800">PARAMETROS DE LA NOMINA</h1>
 <?php
-#$sql="SHOW COLUMNS FROM parametros";
-#$tabla=$bd->sub_tuplas($sql);
+# $sql="SHOW COLUMNS FROM parametros";
+# $tabla=$bd->sub_tuplas($sql);
+$tabla = array(array("Field"=>"id","Id"=>"id","Attrib"=>"readonly"),array("Field"=>"año","Id"=>"ano","Attrib"=>"required"),array("Field"=>"sal mín","Id"=>"salario_minimo","Attrib"=>"required"),array("Field"=>"aux transporte","Id"=>"auxilio_transporte","Attrib"=>"required"),array("Field"=>"UVT","Id"=>"uvt","Attrib"=>"required"),array("Field"=>"% ret salario","Id"=>"porcentaje_retencion_salario","Attrib"=>"required"),array("Field"=>"base retencion","Id"=>"valor_base_retencion","Attrib"=>"required"));
 
-$tabla = array(
-array("Field" => "id"),
-array("Field" => "año"),
-array("Field" => "sal_min"),
-array("Field" => "aux_trasn"),
-array("Field" => "UVT"),
-array("Field" => "% ret salario"),
-array("Field" => "base_retencion")
-); 
-
-$sql2="SELECT id,ano,salario_minimo,auxilio_trasnporte,uvt,porcentaje_retencion_salario,valor_base_retencion FROM parametros ORDER BY id ASC";
+$sql2="SELECT id,ano,salario_minimo,auxilio_transporte,uvt,porcentaje_retencion_salario,	valor_base_retencion FROM parametros ORDER BY id ASC";
 $tabla_cuerpo=$bd->sub_tuplas($sql2);
 ?>
 <!-- DataTable -->
 <div class="card shadow mb-4">
 	<div class="card-header py-3">
-		<h6 class="m-0 font-weight-bold text-primary">Parametros de Configuración</h6>
+		<h6 class="m-0 font-weight-bold text-primary">Configuración de Parámetros de Nómina - Periodo</h6>
 	</div>
 	<div class="card-body">
 		<div class="table-responsive">
@@ -51,36 +42,18 @@ $tabla_cuerpo=$bd->sub_tuplas($sql2);
 				</div>
 				<div class="modal-body">
 					<form action="/action_page/class-ut/prot" class="needs-validation" novalidate onsubmit="return comprobar2();">
+					<?php
+					foreach ($tabla as $key => $value) {
+					?>
 						<div class="form-group">
-							<label for="id">ID:</label>
-							<input type="text" class="form-control" id="id" placeholder="ID" readonly>
-							<div class="valid-feedback">Valido.</div>
-							<div class="invalid-feedback">Please fill out this field.</div>
-						</div>
-						<div class="form-group">
-							<label for="titulo">Tiulo:</label>
-							<input type="text" class="form-control" id="titulo" placeholder="Ingrese título" required>
+							<label for="<?php echo $value["Id"]; ?>"><?php echo ucfirst($value["Field"]); ?>:</label>
+							<input type="text" class="form-control" id="<?php echo $value["Id"]; ?>" placeholder="<?php echo ucfirst($value["Field"]); ?>" <?php echo $value["Attrib"]; ?>>
 							<div class="valid-feedback">Valido.</div>
 							<div class="invalid-feedback">Por favor llene este campo.</div>
-						</div>
-						<div class="form-group">
-							<label for="icono">Icono:</label>
-							<input type="text" class="form-control" id="icono" placeholder="Ingrese ícono" required>
-							<div class="valid-feedback">Valido.</div>
-							<div class="invalid-feedback">Por favor llene este campo.</div>
-						</div>
-						<div class="form-group">
-							<label for="programa">Programa:</label>
-							<input type="text" class="form-control" id="programa" placeholder="Ingrese programa" required>
-							<div class="valid-feedback">Valido.</div>
-							<div class="invalid-feedback">Por favor llene este campo.</div>
-						</div>
-						<div class="form-group">
-							<label for="url">URL:</label>
-							<input type="text" class="form-control" id="url" placeholder="Ingrese URL" required>
-							<div class="valid-feedback">Valido.</div>
-							<div class="invalid-feedback">Por favor llene este campo.</div>
-						</div>
+						</div>			
+					<?php
+					}
+					?>
 						<button class="btn btn-secondary" type="submit" data-dismiss="modal">Cancelar</button>
 						<button class="btn btn-primary" id="grabar" type="submit">Grabar</button>
 						<input type="hidden" id="caso" value="">
@@ -116,94 +89,23 @@ $tabla_cuerpo=$bd->sub_tuplas($sql2);
   }, false);
 })();
 
-function comprobar() {
-	$.post("revisa_menu.php",
-	{
-		id: $("#id").val(),
-		titulo: $("#titulo").val(),
-		icono: $("#icono").val(),
-		programa: $("#programa").val(),
-		url: $("#url").val(),
-		caso: $("#caso").val()
-	},
-	function(data, status) {	// CallBack
-		alert("Data: " + data + "\nStatus: " + status);
-		console.log('Caso: '+$("#caso").val()+' row_crud: '+ $("#row_crud").val()+' id: '+$("#id").val());
-		var Obj1 = JSON.parse(data);
-		var t = $('#dataTable').DataTable();
-
-        if (Obj1.mensaje.substr(0,3)=="OK." || Obj1.mensaje.substr(0,6)!="ERROR:") {
-          switch ($("#caso").val()) {
-            case 'u': // Update
-              t.row($("#row_crud").val()).data(new Array(
-              '<button class="btn btn-info btn-sm" title="Editar" data-toggle="modal" data-target="#formModal" onclick="editar('+$("#id").val()+',this.parentNode.parentNode.id);"><i class="fas fa-edit" style="font-size:12px"></i></button>',
-              $("#id").val(),
-              $("#titulo").val(),
-              $("#icono").val(),
-              $("#programa").val(),
-              $("#url").val(),
-              '<button class="btn btn-danger btn-sm" title="Eliminar" data-toggle="modal" data-target="#formModal" onclick="eliminar('+$("#id").val()+',this.parentNode.parentNode.id);"><i class="fas fa-trash" style="font-size:12px"></i></button>')).draw( false );
-              break;
-            case 'd': // Delete
-              //if ($("#row_crud").val()!="") {
-              	alert('row_crud: '+$("#row_crud").val())
-                // t.row($("#row_crud").val(), { page: 'current' }).remove().draw( true );
-                t.row($("#row_crud").val()).remove().draw( true );
-                // renum_row_id($("#row_crud").val());
-                // t.draw( true );
-              //}
-              break;
-            case 'c': // Create
-              t.row.add( [
-                '<button class="btn btn-info btn-sm" title="Editar" data-toggle="modal" data-target="#formModal" onclick="editar('+Obj1.id+',this.parentNode.parentNode.id);"><i class="fas fa-edit" style="font-size:12px"></i></button>',
-                Obj1.id,
-                $("#titulo").val(),
-                $("#icono").val(),
-                $("#programa").val(),
-                $("#url").val(),
-                '<button class="btn btn-danger btn-sm" title="Eliminar" data-toggle="modal" data-target="#formModal" onclick="eliminar('+Obj1.id+',this.parentNode.parentNode.id);"><i class="fas fa-trash" style="font-size:12px"></i></button>'
-              ] ).draw( false );
-              // console.log( y.rows().data() );
-              break;
-          }
-          //$("#caso").val("");
-		  //$("#row_crud").val("");
-      	} else {
-
-      	}
-		alert(Obj1.mensaje);
-		// $(".close").click();
-		$('#formModal').modal("hide");
-		if (Obj1.mensaje.substr(0,3)=="OK." || Obj1.mensaje.substr(0,6)!="ERROR:") {
-          //if ($("#caso").val() == 'd') {
-			//	renum_row_id($("#row_crud").val());
-		  // }
-		}
-	});
-
-	if ($("#caso").val() == 'd') {
-		renum_row_id($("#row_crud").val());
-	}
-	return false;
-}
 
 function comprobar2() {
 	$.ajax({
-		url: "revisa_menu.php",
+		url: "revisa_parametros.php",
 		async: true,
 		cache: true,
 		type: 'POST',
 		data: {
-			id: $("#id").val(),
-			titulo: $("#titulo").val(),
-			icono: $("#icono").val(),
-			programa: $("#programa").val(),
-			url: $("#url").val(),
-			caso: $("#caso").val()
+		<?php
+		foreach ($tabla as $key => $value) {	 # Genera JavaScript
+			echo $value["Id"]; ?>: $("#<?php echo $value["Id"]; ?>").val(),
+		<?php } ?>
+		caso: $("#caso").val()
 		},
 		success: function(data2) {	// Función CallBack
 			alert("Data: " + data2);
-			console.log('Caso: '+$("#caso").val()+' row_crud: '+ $("#row_crud").val()+' id: '+$("#id").val());
+			//console.log('Caso: '+$("#caso").val()+' row_crud: '+ $("#row_crud").val()+' id: '+$("#id").val());
 			var Obj1 = JSON.parse(data2);
 			var t = $('#dataTable').DataTable();
 
@@ -211,13 +113,27 @@ function comprobar2() {
 	          switch ($("#caso").val()) {
 	            case 'u': // Update
 	              t.row($("#row_crud").val()).data(new Array(
-	              '<button class="btn btn-info btn-sm" title="Editar" data-toggle="modal" data-target="#formModal" onclick="editar('+$("#id").val()+',this.parentNode.parentNode.id);"><i class="fas fa-edit" style="font-size:12px"></i></button>',
-	              $("#id").val(),
-	              $("#titulo").val(),
-	              $("#icono").val(),
-	              $("#programa").val(),
-	              $("#url").val(),
-	              '<button class="btn btn-danger btn-sm" title="Eliminar" data-toggle="modal" data-target="#formModal" onclick="eliminar('+$("#id").val()+',this.parentNode.parentNode.id);"><i class="fas fa-trash" style="font-size:12px"></i></button>')).draw( false );
+	              <?php
+	              foreach ($tabla as $key => $value) {	 # Genera JavaScript
+		              if ($key==0) {	// Primera columna
+		              	$nkey = $value["Id"];
+		              ?>
+		              '<button class="btn btn-info btn-sm" title="Editar" data-toggle="modal" data-target="#formModal" onclick="editar('+$("#<?php echo $nkey; ?>").val()+',this.parentNode.parentNode.id);"><i class="fas fa-edit" style="font-size:12px"></i></button>',
+		              $("#<?php echo $value["Id"]; ?>").val(),
+		              <?php
+		              } elseif ($key==count($tabla)-1) { // Ultima columna
+		              ?>
+		              $("#<?php echo $value["Id"]; ?>").val(),
+		              '<button class="btn btn-danger btn-sm" title="Eliminar" data-toggle="modal" data-target="#formModal" onclick="eliminar('+$("#<?php echo $nkey; ?>").val()+',this.parentNode.parentNode.id);"><i class="fas fa-trash" style="font-size:12px"></i></button>'
+		              <?php	
+		              } else { // Columnas intermedias
+		              ?>
+					  $("#<?php echo $value["Id"]; ?>").val(),
+		              <?php
+		              }
+	          	  }
+	          	  ?>
+	              )).draw( false );
 	              break;
 	            case 'd': // Delete
 	              //if ($("#row_crud").val()!="") {
@@ -234,13 +150,26 @@ function comprobar2() {
 	              break;
 	            case 'c': // Create
 	              t.row.add( [
-	                '<button class="btn btn-info btn-sm" title="Editar" data-toggle="modal" data-target="#formModal" onclick="editar('+Obj1.id+',this.parentNode.parentNode.id);"><i class="fas fa-edit" style="font-size:12px"></i></button>',
-	                Obj1.id,
-	                $("#titulo").val(),
-	                $("#icono").val(),
-	                $("#programa").val(),
-	                $("#url").val(),
-	                '<button class="btn btn-danger btn-sm" title="Eliminar" data-toggle="modal" data-target="#formModal" onclick="eliminar('+Obj1.id+',this.parentNode.parentNode.id);"><i class="fas fa-trash" style="font-size:12px"></i></button>'
+	              <?php
+	              foreach ($tabla as $key => $value) {	 # Genera JavaScript
+		              if ($key==0) {	// Primera columna
+		              	$nkey = $value["Id"];
+		              ?>
+	                '<button class="btn btn-info btn-sm" title="Editar" data-toggle="modal" data-target="#formModal" onclick="editar('+Obj1.<?php echo $nkey; ?>+',this.parentNode.parentNode.id);"><i class="fas fa-edit" style="font-size:12px"></i></button>',
+	                Obj1.<?php echo $value["Id"]; ?>,
+		              <?php
+		              } elseif ($key==count($tabla)-1) { // Ultima columna
+		              ?>
+		            $("#<?php echo $value["Id"]; ?>").val(),
+	                '<button class="btn btn-danger btn-sm" title="Eliminar" data-toggle="modal" data-target="#formModal" onclick="eliminar('+Obj1.<?php echo $nkey; ?>+',this.parentNode.parentNode.id);"><i class="fas fa-trash" style="font-size:12px"></i></button>'
+		              <?php	
+		              } else { // Columnas intermedias
+		              ?>
+					  $("#<?php echo $value["Id"]; ?>").val(),
+		              <?php
+		              }
+	          	  }
+	          	  ?>
 	              ] ).draw( false );
 	              // console.log( y.rows().data() );
 	              break;
@@ -279,11 +208,19 @@ function adicionar() {
 	$("#grabar").text("Adicionar").removeClass("btn-danger").addClass("btn-primary");
 	$("#caso").val("c");
 	$("#row_crud").val("");
-	$("#id").val("");
-	$("#titulo").val("").attr("readonly",false);
-	$("#icono").val("").attr("readonly",false);
-	$("#programa").val("").attr("readonly",false);
-	$("#url").val("").attr("readonly",false);	
+	<?php
+	foreach ($tabla as $key => $value) {	 # Genera JavaScript
+	  if ($key==0) {	// Primera columna
+	  	?>
+		$("#<?php echo $value["Id"]; ?>").val("");
+		<?php
+	  } else {	// Otras columnas
+	  	?>
+		$("#<?php echo $value["Id"]; ?>").val("").attr("readonly",false);
+		<?php
+	  }
+	}
+	?>
 	console.log('Caso: '+$("#caso").val()+' row_crud: '+ $("#row_crud").val()+' id: '+$("#id").val());
 
 }
@@ -298,19 +235,27 @@ function editar(id_ref,id_tr) {
 	$("#grabar").text("Actualizar").removeClass("btn-danger").addClass("btn-primary");
 	$("#caso").val("u");
 
-	$.post("consulta_menu.php",
+	$.post("consulta_parametros.php",
 	{
 		id: id_ref
 	},
-	function(data, status) {
+	function(data, status) {	// CallBack
 		// alert("Data: " + data + "\nStatus: " + status);
 		var Obj1 = JSON.parse(data);
 		// alert(Obj1.titulo);
-		$("#id").val(Obj1.id);
-		$("#titulo").val(Obj1.titulo).attr("readonly",false);
-		$("#icono").val(Obj1.icono).attr("readonly",false);
-		$("#programa").val(Obj1.programa).attr("readonly",false);
-		$("#url").val(Obj1.url).attr("readonly",false);
+		<?php
+		foreach ($tabla as $key => $value) {	 # Genera JavaScript
+		  if ($key==0) {	// Primera columna
+		  	?>
+			$("#<?php echo $value["Id"]; ?>").val(Obj1.<?php echo $value["Id"]; ?>);
+			<?php
+		  } else {	// Otras columnas
+		  	?>
+			$("#<?php echo $value["Id"]; ?>").val(Obj1.<?php echo $value["Id"]; ?>).attr("readonly",false);
+			<?php
+		  }
+		}
+		?>
 		console.log('Caso: '+$("#caso").val()+' row_crud: '+ $("#row_crud").val()+' id: '+$("#id").val());
 	});
 
@@ -333,7 +278,7 @@ function eliminar(id_ref,id_tr) {
 	$("#grabar").text("Eliminar").removeClass("btn-primary").addClass("btn-danger");
 	$("#caso").val("d");
 
-	$.post("consulta_menu.php",
+	$.post("consulta_parametros.php",
 	{
 		id: id_ref
 	},
@@ -341,11 +286,19 @@ function eliminar(id_ref,id_tr) {
 		// alert("Data: " + data + "\nStatus: " + status);
 		var Obj1 = JSON.parse(data);
 		// alert(Obj1.titulo);
-		$("#id").val(Obj1.id);
-		$("#titulo").val(Obj1.titulo).attr("readonly",true);
-		$("#icono").val(Obj1.icono).attr("readonly",true);
-		$("#programa").val(Obj1.programa).attr("readonly",true);
-		$("#url").val(Obj1.url).attr("readonly",true);
+		<?php
+		foreach ($tabla as $key => $value) {	 # Genera JavaScript
+		  if ($key==0) {	// Primera columna
+		  	?>
+			$("#<?php echo $value["Id"]; ?>").val(Obj1.<?php echo $value["Id"]; ?>);
+			<?php
+		  } else {	// Otras columnas
+		  	?>
+			$("#<?php echo $value["Id"]; ?>").val(Obj1.<?php echo $value["Id"]; ?>).attr("readonly",true);
+			<?php
+		  }
+		}
+		?>
 		console.log('Caso: '+$("#caso").val()+' row_crud: '+ $("#row_crud").val()+' id: '+$("#id").val());
 
 	});
