@@ -308,8 +308,165 @@ CREATE TABLE `menus` (
 
 LOCK TABLES `menus` WRITE;
 /*!40000 ALTER TABLE `menus` DISABLE KEYS */;
-INSERT INTO `menus` VALUES (1,'Admón Usuarios','<i class=\"fas fa-building\" style=\"font-size:24px\"></i>','adm_usuarios','admon_usuarios'),(2,'Admón Menús','<i class=\'fas fa-book\' style=\'font-size:24px\'></i>','adm_menus','admon_menus'),(3,'Admón Perfiles','<i class=\'fas fa-bullhorn\' style=\'font-size:24px\'></i>','adm_perfiles','admon_perfiles'),(4,'Admón Empleados','<i class=\"fas fa-address-card\" style=\"font-size:24px\"></i>','adm_empleados','admon_empleados'),(5,'Admón Novedades','<i class=\'fas fa-book\' style=\'font-size:24px\'></i>','adm_novedades','admon_novedades'),(6,'Liquidación Nómina','<i class=\'fas fa-fax\' style=\'font-size:24px\'></i>','liquidacion_nomina','liquidacion_nomina'),(7,'Parámetros Nómina','<i class=\'fas fa-globe\' style=\'font-size:24px\'></i>','parametros_nomina','parametros_nomina'),(75,'rrrrrrrrrr','rrrrrrrrrr','rrrrrrrrrr','rrrrrrrrrr'),(76,'zzzzzzzz','zzzzzzzz','zzzzzzzz','zzzzzzzz'),(77,'fffffffff','fffffffff','fffffffff','fffffffff'),(78,'ggggggggg','ggggggggg','ggggggggg','ggggggggg'),(79,'hhhhhhhhhhh','hhhhhhhhhhh','hhhhhhhhhhh','hhhhhhhhhhh'),(80,'ppppppppp','ppppppppp','ppppppppp','ppppppppp'),(81,'vvvvvvvvvv','vvvvvvvvvv','vvvvvvvvvv','vvvvvvvvvv'),(82,'','','','');
+INSERT INTO `menus` VALUES (1,'Admón Usuarios','<i class=\"fas fa-building\" style=\"font-size:24px\"></i>','adm_usuarios','admon_usuarios'),(2,'Admón Menús','<i class=\'fas fa-book\' style=\'font-size:24px\'></i>','adm_menus','admon_menus'),(3,'Admón Perfiles','<i class=\'fas fa-bullhorn\' style=\'font-size:24px\'></i>','adm_perfiles','admon_perfiles'),(4,'Admón Empleados','<i class=\"fas fa-address-card\" style=\"font-size:24px\"></i>','adm_empleados','admon_empleados'),(5,'Admón Novedades','<i class=\'fas fa-book\' style=\'font-size:24px\'></i>','adm_novedades','admon_novedades'),(6,'Liquidación Nómina','<i class=\'fas fa-fax\' style=\'font-size:24px\'></i>','liquidacion_nomina','liquidacion_nomina'),(7,'Parámetros Nómina','<i class=\'fas fa-globe\' style=\'font-size:24px\'></i>','parametros_nomina','parametros_nomina'),(75,'rrrrrrrrrr','rrrrrrrrrr','rrrrrrrrrr','rrrrrrrrrr'),(76,'zzzzzzzz','zzzzzzzz','zzzzzzzz','zzzzzzzz'),(78,'ggggggggg','ggggggggg','ggggggggg','ggggggggg'),(79,'hhhhhhhhhhh','hhhhhhhhhhh','hhhhhhhhhhh','hhhhhhhhhhh'),(80,'ppppppppp','ppppppppp','ppppppppp','ppppppppp'),(81,'vvvvvvvvvv','vvvvvvvvvv','vvvvvvvvvv','vvvvvvvvvv'),(82,'','','','');
 /*!40000 ALTER TABLE `menus` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `nomina_cabecera`
+--
+
+DROP TABLE IF EXISTS `nomina_cabecera`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `nomina_cabecera` (
+  `id` int(3) NOT NULL AUTO_INCREMENT,
+  `fecha` date NOT NULL,
+  `empresa_id` int(2) NOT NULL,
+  `estado` tinyint(1) NOT NULL DEFAULT '0' COMMENT '0=Proceso,1=Liquidado',
+  `periodos_pago_id` int(1) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `empresa_id` (`empresa_id`),
+  KEY `periodos_pago_id` (`periodos_pago_id`),
+  CONSTRAINT `nomina_cabecera_ibfk_1` FOREIGN KEY (`empresa_id`) REFERENCES `empresas` (`id`) ON UPDATE CASCADE,
+  CONSTRAINT `nomina_cabecera_ibfk_2` FOREIGN KEY (`periodos_pago_id`) REFERENCES `periodos_pago` (`id`) ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish2_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `nomina_cabecera`
+--
+
+LOCK TABLES `nomina_cabecera` WRITE;
+/*!40000 ALTER TABLE `nomina_cabecera` DISABLE KEYS */;
+/*!40000 ALTER TABLE `nomina_cabecera` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `nomina_detalle`
+--
+
+DROP TABLE IF EXISTS `nomina_detalle`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `nomina_detalle` (
+  `id` int(4) NOT NULL AUTO_INCREMENT,
+  `nomina_cabecera_id` int(3) NOT NULL,
+  `empleado_id` int(3) NOT NULL,
+  `salario` int(4) NOT NULL,
+  `dias_laborados` int(1) NOT NULL,
+  `salario_integral` tinyint(1) NOT NULL DEFAULT '0' COMMENT '0=No,1=Si ',
+  `salario_devengado` int(4) NOT NULL,
+  `aux_transporte` int(3) NOT NULL,
+  `otros_ingresos` int(4) NOT NULL,
+  `deduccion_salud` int(4) NOT NULL,
+  `deduccion_pension` int(4) NOT NULL,
+  `otras_deducciones` int(4) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `nomina_cabecera_id` (`nomina_cabecera_id`),
+  KEY `empleado_id` (`empleado_id`),
+  CONSTRAINT `nomina_detalle_ibfk_1` FOREIGN KEY (`nomina_cabecera_id`) REFERENCES `nomina_cabecera` (`id`) ON UPDATE CASCADE,
+  CONSTRAINT `nomina_detalle_ibfk_2` FOREIGN KEY (`empleado_id`) REFERENCES `empleados` (`id`) ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish2_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `nomina_detalle`
+--
+
+LOCK TABLES `nomina_detalle` WRITE;
+/*!40000 ALTER TABLE `nomina_detalle` DISABLE KEYS */;
+/*!40000 ALTER TABLE `nomina_detalle` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `novedades_cabecera`
+--
+
+DROP TABLE IF EXISTS `novedades_cabecera`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `novedades_cabecera` (
+  `id` int(3) NOT NULL AUTO_INCREMENT,
+  `nomina_id` int(3) NOT NULL,
+  `estado` tinyint(1) NOT NULL DEFAULT '0' COMMENT '0=En proceso,1=Cerrado',
+  `fecha` date NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `nomina_id` (`nomina_id`),
+  CONSTRAINT `novedades_cabecera_ibfk_1` FOREIGN KEY (`nomina_id`) REFERENCES `nomina_cabecera` (`id`) ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish2_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `novedades_cabecera`
+--
+
+LOCK TABLES `novedades_cabecera` WRITE;
+/*!40000 ALTER TABLE `novedades_cabecera` DISABLE KEYS */;
+/*!40000 ALTER TABLE `novedades_cabecera` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `novedades_detalle`
+--
+
+DROP TABLE IF EXISTS `novedades_detalle`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `novedades_detalle` (
+  `id` int(4) NOT NULL AUTO_INCREMENT,
+  `novedades_cabecera_id` int(3) NOT NULL,
+  `empleado_id` int(4) NOT NULL,
+  `tipo_novedad_id` int(1) NOT NULL,
+  `dias` int(1) NOT NULL,
+  `valor` int(4) NOT NULL,
+  `notas` text COLLATE utf8_spanish2_ci NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `empleado_id` (`empleado_id`),
+  KEY `tipo_novedad_id` (`tipo_novedad_id`),
+  KEY `novedades_cabecera_id` (`novedades_cabecera_id`),
+  CONSTRAINT `novedades_detalle_ibfk_1` FOREIGN KEY (`novedades_cabecera_id`) REFERENCES `novedades_cabecera` (`id`) ON UPDATE CASCADE,
+  CONSTRAINT `novedades_detalle_ibfk_2` FOREIGN KEY (`empleado_id`) REFERENCES `empleados` (`id`) ON UPDATE CASCADE,
+  CONSTRAINT `novedades_detalle_ibfk_3` FOREIGN KEY (`tipo_novedad_id`) REFERENCES `tipos_novedad` (`id`) ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish2_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `novedades_detalle`
+--
+
+LOCK TABLES `novedades_detalle` WRITE;
+/*!40000 ALTER TABLE `novedades_detalle` DISABLE KEYS */;
+/*!40000 ALTER TABLE `novedades_detalle` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `parametros`
+--
+
+DROP TABLE IF EXISTS `parametros`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `parametros` (
+  `id` int(1) NOT NULL AUTO_INCREMENT,
+  `ano` int(2) NOT NULL,
+  `salario_minimo` int(3) NOT NULL,
+  `auxilio_transporte` int(3) NOT NULL,
+  `uvt` int(2) NOT NULL,
+  `porcentaje_retencion_salario` int(1) NOT NULL,
+  `valor_base_retencion` int(3) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COLLATE=utf8_spanish2_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `parametros`
+--
+
+LOCK TABLES `parametros` WRITE;
+/*!40000 ALTER TABLE `parametros` DISABLE KEYS */;
+INSERT INTO `parametros` VALUES (1,2018,781242,88211,33156,10,4475788),(2,2019,828116,97032,34270,0,0);
+/*!40000 ALTER TABLE `parametros` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -445,7 +602,7 @@ CREATE TABLE `tipos_novedad` (
   `id` int(1) NOT NULL AUTO_INCREMENT,
   `descripcion` varchar(30) COLLATE utf8_spanish2_ci NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8 COLLATE=utf8_spanish2_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8 COLLATE=utf8_spanish2_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -454,7 +611,7 @@ CREATE TABLE `tipos_novedad` (
 
 LOCK TABLES `tipos_novedad` WRITE;
 /*!40000 ALTER TABLE `tipos_novedad` DISABLE KEYS */;
-INSERT INTO `tipos_novedad` VALUES (1,'Ingreso'),(2,'Retiro'),(3,'Vacaciones'),(4,'Licencia Maternidad'),(5,'Licencia no remunerada'),(6,'Incapacidad General'),(7,'Incapacidad Laboral'),(8,'Cuota Prestamo'),(9,'Cuota Fondo de Empleados'),(10,'Cuota Sindicato'),(11,'Ausentismo  no remunerado'),(12,'Suspensión del contrato');
+INSERT INTO `tipos_novedad` VALUES (1,'Ingreso'),(2,'Retiro'),(3,'Vacaciones'),(4,'Licencia Maternidad'),(5,'Licencia no remunerada'),(6,'Incapacidad General'),(7,'Incapacidad Laboral'),(8,'Cuota Prestamo'),(9,'Cuota Fondo de Empleados'),(10,'Cuota Sindicato'),(11,'Ausentismo  no remunerado'),(12,'Suspensión del contrato'),(13,'Variación del salario');
 /*!40000 ALTER TABLE `tipos_novedad` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -498,4 +655,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-04-24 21:21:13
+-- Dump completed on 2019-04-29 21:19:13
