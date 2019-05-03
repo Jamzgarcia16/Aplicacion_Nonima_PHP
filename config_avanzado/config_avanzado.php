@@ -12,7 +12,7 @@ define("USER_BD", "ap_nomina");
 
 $key = hex2bin('5ae1b8a17bad4da4fdac796f64c16ecd');
 $iv = hex2bin('34857d973953e44afb49ea9d61104d8c');
-$filename = "../../../config_avanzado/key.enc.txt";
+$filename = "../../../config_avanzado/clave2.enc.txt";
 $handle = fopen($filename, "r");
 $encstr = fread($handle, filesize($filename));
 fclose($handle);
