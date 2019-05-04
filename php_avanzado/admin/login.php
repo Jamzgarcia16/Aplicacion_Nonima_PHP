@@ -1,6 +1,6 @@
 <?php
 require_once '../../../config_avanzado/config_avanzado.php';
-
+$_SESSION["pav"]["token_xss"] = $token_csrf;
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -67,6 +67,7 @@ require_once '../../../config_avanzado/config_avanzado.php';
                     <a href="index.html" class="btn btn-facebook btn-user btn-block">
                       <i class="fab fa-facebook-f fa-fw"></i> Login with Facebook
                     </a>
+                    <input type="hidden" name="token_csrf" value="<?php echo $token_csrf; ?>">
                   </form>
                   <hr>
                   <div class="text-center">

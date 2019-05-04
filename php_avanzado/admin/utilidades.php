@@ -40,7 +40,7 @@ echo md5('El curso de PHP 7.0 está HOT'); //
 echo sha1('El curso de PHP 7.0 está HOT'); // 
 
 /* encrypting in command line console with openssl
-openssl AES-256-CBC -K 5ae1b8a17bad4da4fdac796f64c16ecd -iv 34857d973953e44afb49ea9d61104d8c -in doc.txt -out doc.enc.txt
+openssl AES-256-CBC -K 5ae1b8a17bad4da4fdac796f64c16ecd -iv 34857d973953e44afb49ea9d61104d8c -in key.txt -out doc.enc.txt
 
 decripting in php */
 $key = hex2bin('5ae1b8a17bad4da4fdac796f64c16ecd');

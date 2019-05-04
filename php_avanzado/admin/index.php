@@ -516,3 +516,7 @@ $(document).ready(function() {
 </script>
 </body>
 </html>
+<?php
+# Actualizamos en la sesión el último token generado
+$_SESSION["pav"]["token_xss"] = $token_csrf;
+?>

@@ -75,6 +75,7 @@ $tabla_cuerpo=$bd->sub_tuplas($sql2);
 						<button class="btn btn-primary" id="grabar" type="submit">Grabar</button>
 						<input type="hidden" id="caso" value="">
 						<input type="hidden" id="row_crud" value="">
+						<input type="hidden" id="token_csrf" value="<?php echo $token_csrf; ?>">
 					</form>
 				</div>
 				<div class="modal-footer">
@@ -189,12 +190,17 @@ function comprobar2() {
 			icono: $("#icono").val(),
 			programa: $("#programa").val(),
 			url: $("#url").val(),
+			token: $("#token_csrf").val(),
 			caso: $("#caso").val()
 		},
 		success: function(data2) {	// Función CallBack
-			alert("Data: " + data2);
+			// alert("Data: " + data2);
+			if (data2=="") {
+	          window.location.reload();
+	        }
 			console.log('Caso: '+$("#caso").val()+' row_crud: '+ $("#row_crud").val()+' id: '+$("#id").val());
 			var Obj1 = JSON.parse(data2);
+			$("#token_csrf").val(Obj1.token);
 			var t = $('#dataTable').DataTable();
 
 	        if (Obj1.mensaje.substr(0,3)=="OK." || Obj1.mensaje.substr(0,6)!="ERROR:") {
@@ -290,10 +296,14 @@ function editar(id_ref,id_tr) {
 
 	$.post("consulta_menu.php",
 	{
-		id: id_ref
+		id: id_ref,
+		token: $("#token_csrf").val()
 	},
 	function(data, status) {
-		// alert("Data: " + data + "\nStatus: " + status);
+		//alert("Data: " + data + "\nStatus: " + status);
+		if (data=="") {
+          window.location.reload();
+        }
 		var Obj1 = JSON.parse(data);
 		// alert(Obj1.titulo);
 		$("#id").val(Obj1.id);
@@ -301,6 +311,7 @@ function editar(id_ref,id_tr) {
 		$("#icono").val(Obj1.icono).attr("readonly",false);
 		$("#programa").val(Obj1.programa).attr("readonly",false);
 		$("#url").val(Obj1.url).attr("readonly",false);
+		$("#token_csrf").val(Obj1.token);
 		console.log('Caso: '+$("#caso").val()+' row_crud: '+ $("#row_crud").val()+' id: '+$("#id").val());
 	});
 
@@ -325,10 +336,14 @@ function eliminar(id_ref,id_tr) {
 
 	$.post("consulta_menu.php",
 	{
-		id: id_ref
+		id: id_ref,
+		token: $("#token_csrf").val()
 	},
 	function(data, status) {
 		// alert("Data: " + data + "\nStatus: " + status);
+		if (data=="") {
+          window.location.reload();
+        }
 		var Obj1 = JSON.parse(data);
 		// alert(Obj1.titulo);
 		$("#id").val(Obj1.id);
@@ -336,6 +351,7 @@ function eliminar(id_ref,id_tr) {
 		$("#icono").val(Obj1.icono).attr("readonly",true);
 		$("#programa").val(Obj1.programa).attr("readonly",true);
 		$("#url").val(Obj1.url).attr("readonly",true);
+		$("#token_csrf").val(Obj1.token);
 		console.log('Caso: '+$("#caso").val()+' row_crud: '+ $("#row_crud").val()+' id: '+$("#id").val());
 
 	});
