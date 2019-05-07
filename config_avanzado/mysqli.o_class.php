@@ -39,6 +39,7 @@ class base
 			$this->b->set_charset(CHARSET_BD);
 		}
 	}
+	
 	function consulta($query) {		# Ejecuta el Query
 		if (!empty($query) && $this->b) {
 			if ($this->id_resultado = $this->b->query($query)) {

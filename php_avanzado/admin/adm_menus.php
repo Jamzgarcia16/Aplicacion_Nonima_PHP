@@ -41,6 +41,8 @@ $tabla_cuerpo=$bd->sub_tuplas($sql2);
 				</div>
 				<div class="modal-body">
 					<form action="/action_page/class-ut/prot" class="needs-validation" novalidate onsubmit="return comprobar2();">
+
+						
 						<div class="form-group">
 							<label for="id">ID:</label>
 							<input type="text" class="form-control" id="id" placeholder="ID" readonly>

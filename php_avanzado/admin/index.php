@@ -20,7 +20,12 @@ $_SESSION["error1"]="";
 $bd = new subase();
 
 # print_r($_SERVER);  # Variables del Server
-#echo $_SERVER["REQUEST_URI"];
+#echo $_SERVER["REQUEST_URI"]; 
+#echo "<hr>";
+# le aplicamos a la variable el filtro de las urls del archivo slug.php
+$_SERVER["REQUEST_URI"] = addslashes(post_slug($_SERVER["REQUEST_URI"]));
+#echo $_SERVER["REQUEST_URI"]; 
+
 $arc = explode("/", $_SERVER["REQUEST_URI"]);
 #echo "<br>Logintud de \$arc = ".count($arc)."<br>";
 #echo $arc[count($arc) - 1];
@@ -393,13 +398,7 @@ if ($tabla=$bd->sub_tuplas($sql)) {
       <!-- End of Main Content -->
 
       <!-- Footer -->
-      <footer class="sticky-footer bg-white">
-        <div class="container my-auto">
-          <div class="copyright text-center my-auto">
-            <span>Copyright &copy; Your Website 2019</span>
-          </div>
-        </div>
-      </footer>
+      <?php include 'pie.php'; ?>
       <!-- End of Footer -->
 
     </div>

@@ -20,9 +20,12 @@ if (isset($_POST["email"]) && isset($_POST["clave"]) && isset($_POST["token_csrf
 		if ($bd) {
 			# Conexión a la BD ok
 			$sql="SELECT id,nombre,foto,perfil_id FROM usuarios WHERE cuenta='".$_POST["email"]."' AND clave='".$_POST["clave"]."' and estado=1";
+			#echo "$sql";
 			if ($fila=$bd->sub_fila($sql)) {
 				# Usuario autenticado ok
 				# Activar la sessión
+				#echo "<hr>";
+				#print_r($fila);
 				$_SESSION["pav"]=$fila;
 				$_SESSION["pav"]["token_xss"] = $token_csrf;
 				header("location: index.php");
@@ -46,6 +49,7 @@ if (isset($_POST["email"]) && isset($_POST["clave"]) && isset($_POST["token_csrf
 		session_destroy();
 		session_start();
 		$_SESSION["error1"]="Error h302, en este momento sin servicio, intente mas tarde";
+		
 		header("location: login.php");
 	}
 

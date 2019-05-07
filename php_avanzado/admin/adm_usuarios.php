@@ -47,6 +47,15 @@ $tabla_cuerpo=$bd->sub_tuplas($sql2);
 					<form action="/action_page/class-ut/prot" class="needs-validation" novalidate onsubmit="return comprobar2();">
 					<?php
 					foreach ($tabla as $key => $value) {
+					if (strtolower($value["Field"]) == "estado") {
+						?>
+						<div class="custom-control custom-switch">
+						  <span><?php echo ucfirst($value["Field"]); ?>:</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+					      <input type="checkbox" class="custom-control-input" id="<?php echo $value["Id"]; ?>" <?php echo $value["Attrib"]; ?> onclick="toggle_switch(this);">
+					      <label id="label_estado" class="custom-control-label" for="<?php echo $value["Id"]; ?>">Inactivo</label>
+					    </div>
+    					<?php
+					} else {
 					?>
 						<div class="form-group">
 							<label for="<?php echo $value["Id"]; ?>"><?php echo ucfirst($value["Field"]); ?>:</label>
@@ -55,6 +64,7 @@ $tabla_cuerpo=$bd->sub_tuplas($sql2);
 							<div class="invalid-feedback">Por favor llene este campo.</div>
 						</div>			
 					<?php
+					}
 					}
 					?>
 						<button class="btn btn-secondary" type="submit" data-dismiss="modal">Cancelar</button>
@@ -252,6 +262,11 @@ function editar(id_ref,id_tr) {
 		  	?>
 			$("#<?php echo $value["Id"]; ?>").val(Obj1.<?php echo $value["Id"]; ?>);
 			<?php
+		  } elseif (strtolower($value["Id"])=="estado") {
+		  	?>
+			$("#<?php echo $value["Id"]; ?>").val(Obj1.<?php echo $value["Id"]; ?>).attr("disabled",false).attr("checked",(Obj1.<?php echo $value["Id"]; ?>==1 ? true : false));
+			$("#label_estado").text((Obj1.<?php echo $value["Id"]; ?>==1 ? 'Activo' : 'Inactivo'));
+			<?php
 		  } else {	// Otras columnas
 		  	?>
 			$("#<?php echo $value["Id"]; ?>").val(Obj1.<?php echo $value["Id"]; ?>).attr("readonly",false);
@@ -382,5 +397,17 @@ function info_datatable1() {
 	//tt.column( 3, {order:'current'} ).data();
 	// tt.rows( {order:'index', search:'applied'} ).nodes();
 	//tt.rows( {order:'index'} ).nodes();
+}
+
+function toggle_switch(obj) {
+	if ($(obj).is(':checked')) {
+		$(obj).val(1);
+		$(obj).attr("checked",true);
+		$("#label_estado").text("Activo");
+	} else {
+		$(obj).val(0);
+		$(obj).attr("checked",false);
+		$("#label_estado").text("Inactivo");
+	}
 }
 </script>

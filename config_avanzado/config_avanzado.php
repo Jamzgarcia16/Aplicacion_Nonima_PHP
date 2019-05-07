@@ -5,6 +5,12 @@
 	Fecha: Abril 4 de 2019
 	Autor: Su nombre
 */
+# rutina para escapar las variables $_POST
+include 'slug.php'; # limpia las variables
+foreach ($_POST as $key => $value) {
+$_POST[$key] = addslashes(post_slug($_POST[$key]));
+}
+
 define("APLICACION", "NOMINA");
 define("VERSION", "1.0");
 define("SERVIDOR_BD", "localhost");
@@ -22,8 +28,8 @@ define("CLAVE_BD", trim($var1));
 
 define("BD", "nomina");
 define("PUERTO", "3306");
-define("EMPRESA", "Empleamos S.A.S.");
-define("AUTOR", "Su nombre &copy;");
+define("EMPRESA", "Development Software S.A.S.");
+define("AUTOR", "Jimmy Cantor 2019  &copy;");
 
 define("CHARSET_HTML", "utf-8");
 define("CHARSET_BD", "utf8");
