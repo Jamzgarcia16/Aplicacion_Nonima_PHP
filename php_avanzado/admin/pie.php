@@ -7,7 +7,7 @@
         <!-- style 4   chip - logo+text -->
         <div class="style4 animated no-animation ccw-no-hover-an">
           <?php
-          #$men_wp = "https://web.whatsapp.com/send?phone=573124554800&text=Hola,negra estoy haciendo una prueba para mi pagina de arreglo de computadores.";
+          $men_wp = "https://web.whatsapp.com/send?phone=573124554800&text=Hola,negra estoy haciendo una prueba para mi pagina de arreglo de computadores.";
           $face = "https://www.facebook.com/JamzGarciaPCS";
           $youtube = "https://www.youtube.com/watch?v=-ez5xl6VoGM&t=1696s";
           $linkedin = "https://co.linkedin.com/";
@@ -15,7 +15,7 @@
           $instagram = "https://www.instagram.com/?hl=es-la";
 
           #Mientras $men_wp este encryptado no se va a enviar el mensaje de whats app, es una forma de ocultarlo pero no se deja enviar encryptado toca mostrarlo en la URL 
-          $men_wp   = crypt('https://web.whatsapp.com/send?phone=573124554800&text=Hola,negra estoy haciendo una prueba para mi pagina de arreglo de computadores.', '$2a$07$usesomesillystringforsalt$');
+          #$men_wp   = crypt('https://web.whatsapp.com/send?phone=573124554800&text=Hola,negra estoy haciendo una prueba para mi pagina de arreglo de computadores.', '$2a$07$usesomesillystringforsalt$');
           $correcto   = crypt('https://web.whatsapp.com/send?phone=573124554800&text=Hola,negra estoy haciendo una prueba para mi pagina de arreglo de computadores.', '$2a$07$usesomesillystringforsalt$');
           $incorrecto = crypt('apple',  '$2a$07$usesomesillystringforsalt$');
           #str_rot13($men_wp);

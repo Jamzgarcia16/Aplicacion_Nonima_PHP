@@ -17,15 +17,15 @@ if (isset($_POST["id"]) && isset($_POST["nombre"]) && isset($_POST["cuenta"]) &&
 	# Ejecutar Query para actualizar los datos
 	switch ($_POST["caso"]) {
 		case 'u': # Update / Actualizar
-			$sql="UPDATE perfiles SET nombre='".$_POST["nombre"]."',cuenta='".$_POST["cuenta"]."',clave='".$_POST["clave"]."',estado='".$_POST["estado"]."',perfil_id='".$_POST["perfil_id"]."' WHERE id=".$_POST["id"];
+			$sql="UPDATE usuarios SET nombre='".$_POST["nombre"]."',cuenta='".$_POST["cuenta"]."',clave='".$_POST["clave"]."',estado='".$_POST["estado"]."',perfil_id='".$_POST["perfil_id"]."' WHERE id=".$_POST["id"];
 			$mensaje="Actualizado";
 			break;
 		case 'd': # Delete / Eliminar
-			$sql="DELETE FROM perfiles WHERE id=".$_POST["id"];
+			$sql="DELETE FROM usuarios WHERE id=".$_POST["id"];
 			$mensaje="Eliminado";
 			break;
 		case 'c': # Create / Crear
-			$sql="INSERT INTO perfiles (nombre,cuenta,clave,estado,perfil_id) VALUES ('".$_POST["nombre"]."','".$_POST["cuenta"]."','".$_POST["clave"]."','".$_POST["estado"]."','".$_POST["perfil_id"]."')";
+			$sql="INSERT INTO usuarios (nombre,cuenta,clave,estado,perfil_id) VALUES ('".$_POST["nombre"]."','".$_POST["cuenta"]."','".$_POST["clave"]."','".$_POST["estado"]."','".$_POST["perfil_id"]."')";
 			$mensaje="Adicionado";
 			break;
 	}

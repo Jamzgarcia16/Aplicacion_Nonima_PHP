@@ -7,6 +7,7 @@ $tabla = array(array("Field"=>"id","Id"=>"id","Attrib"=>"readonly"),array("Field
 $programa1="revisa_usuarios.php";
 $programa2="consulta_usuarios.php";
 $sql2="SELECT id,nombre,cuenta,clave,foto,estado,perfil_id FROM usuarios ORDER BY id ASC";
+echo $sql2;
 
 $tabla_cuerpo=$bd->sub_tuplas($sql2);
 ?>
@@ -38,7 +39,7 @@ $tabla_cuerpo=$bd->sub_tuplas($sql2);
 	<div class="modal-dialog" role="document">
 		<div class="modal-content">
 			<div class="modal-header">
-				<h5 class="modal-title" id="formModalLabel">Formulario</h5>
+				<h5 class="modal-title" style="font-size: 16" id="formModalLabel">Formulario</h5>
 					<button class="close" type="button" data-dismiss="modal" aria-label="Close">
 					<span aria-hidden="true">×</span>
 					</button>
@@ -51,7 +52,7 @@ $tabla_cuerpo=$bd->sub_tuplas($sql2);
 						?>
 						<div class="custom-control custom-switch">
 						  <span><?php echo ucfirst($value["Field"]); ?>:</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-					      <input type="checkbox" class="custom-control-input" id="<?php echo $value["Id"]; ?>" <?php echo $value["Attrib"]; ?> onclick="toggle_switch(this);">
+					      <input type="checkbox" class="custom-control-input" id="<?php echo $value["Id"]; ?>" <?php echo $value["Attrib"]; ?> onclick="toggle_switch('<?php echo $value["Id"]; ?>');">
 					      <label id="label_estado" class="custom-control-label" for="<?php echo $value["Id"]; ?>">Inactivo</label>
 					    </div>
     					<?php
@@ -125,6 +126,9 @@ function comprobar2() {
 	        if (Obj1.mensaje.substr(0,3)=="OK." || Obj1.mensaje.substr(0,6)!="ERROR:") {
 	          switch ($("#caso").val()) {
 	            case 'u': // Update
+	              var lestado = ($('#<?php echo $value["Id"]; ?>').val()==1?'Activo':'Inactivo');
+	              var checked_estado = ($('#<?php echo $value["Id"]; ?>').val()==1?'checked="checked"':'');
+	              var estado = $('#<?php echo $value["Id"]; ?>').val();
 	              t.row($("#row_crud").val()).data(new Array(
 	              <?php
 	              foreach ($tabla as $key => $value) {	 # Genera JavaScript
@@ -140,9 +144,20 @@ function comprobar2() {
 		              '<button class="btn btn-danger btn-sm" title="Eliminar" data-toggle="modal" data-target="#formModal" onclick="eliminar('+$("#<?php echo $nkey; ?>").val()+',this.parentNode.parentNode.id);"><i class="fas fa-trash" style="font-size:12px"></i></button>'
 		              <?php	
 		              } else { // Columnas intermedias
-		              ?>
-					  $("#<?php echo $value["Id"]; ?>").val(),
-		              <?php
+			              if ($value["Id"]=="estado") {
+			              	?>
+							'<div class="custom-control custom-switch">'+
+							'<label title="+lestado+">'+
+							'<input type="checkbox" class="custom-control-input" value="'+estado+'" id="'+estado+'-t" disabled checked_estado>'+
+	              			'<label id="label_'+estado+'-t" class="custom-control-label" for="<?php echo $value['Id']; ?>">'+lestado+'</label>'+
+	              			'</label>'+
+	              			'</div>',
+							<?php
+			              } else { // Otras columnas
+			              	?>
+					  		$("#<?php echo $value["Id"]; ?>").val(),
+					  		<?php
+		              	  }
 		              }
 	          	  }
 	          	  ?>
@@ -239,7 +254,7 @@ function adicionar() {
 }
 function editar(id_ref,id_tr) {
 	// Adicionar un registro
-	//alert(id_tr);
+	alert(id_tr);
 	$("#"+id_tr).addClass('selected');
     yy=id_tr.split("-");  // En PHP:   explode
     //alert(yy[1]);
@@ -253,7 +268,7 @@ function editar(id_ref,id_tr) {
 		id: id_ref
 	},
 	function(data, status) {	// CallBack
-		// alert("Data: " + data + "\nStatus: " + status);
+		alert("Data: " + data + "\nStatus: " + status);
 		var Obj1 = JSON.parse(data);
 		// alert(Obj1.titulo);
 		<?php
@@ -264,7 +279,7 @@ function editar(id_ref,id_tr) {
 			<?php
 		  } elseif (strtolower($value["Id"])=="estado") {
 		  	?>
-			$("#<?php echo $value["Id"]; ?>").val(Obj1.<?php echo $value["Id"]; ?>).attr("disabled",false).attr("checked",(Obj1.<?php echo $value["Id"]; ?>==1 ? true : false));
+			$("#<?php echo $value["Id"]; ?>").val(Obj1.<?php echo $value["Id"]; ?>).attr("disabled",false).prop("checked",(Obj1.<?php echo $value["Id"]; ?>==1 ? true : false));
 			$("#label_estado").text((Obj1.<?php echo $value["Id"]; ?>==1 ? 'Activo' : 'Inactivo'));
 			<?php
 		  } else {	// Otras columnas
@@ -309,6 +324,11 @@ function eliminar(id_ref,id_tr) {
 		  if ($key==0) {	// Primera columna
 		  	?>
 			$("#<?php echo $value["Id"]; ?>").val(Obj1.<?php echo $value["Id"]; ?>);
+			<?php
+		  } elseif (strtolower($value["Id"])=="estado") {
+		  	?>
+			$("#<?php echo $value["Id"]; ?>").val(Obj1.<?php echo $value["Id"]; ?>).attr("disabled",true).prop("checked",(Obj1.<?php echo $value["Id"]; ?>==1 ? true : false));
+			$("#label_estado").text((Obj1.<?php echo $value["Id"]; ?>==1 ? 'Activo' : 'Inactivo'));
 			<?php
 		  } else {	// Otras columnas
 		  	?>
@@ -400,13 +420,13 @@ function info_datatable1() {
 }
 
 function toggle_switch(obj) {
-	if ($(obj).is(':checked')) {
-		$(obj).val(1);
-		$(obj).attr("checked",true);
+	if ($("#"+obj).is(':checked')) {
+		$("#"+obj).val(1);
+		$("#"+obj).attr("checked",true);
 		$("#label_estado").text("Activo");
 	} else {
-		$(obj).val(0);
-		$(obj).attr("checked",false);
+		$("#"+obj).val(0);
+		$("#"+obj).attr("checked",false);
 		$("#label_estado").text("Inactivo");
 	}
 }
