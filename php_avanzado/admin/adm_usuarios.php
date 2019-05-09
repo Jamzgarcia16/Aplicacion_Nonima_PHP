@@ -7,7 +7,6 @@ $tabla = array(array("Field"=>"id","Id"=>"id","Attrib"=>"readonly"),array("Field
 $programa1="revisa_usuarios.php";
 $programa2="consulta_usuarios.php";
 $sql2="SELECT id,nombre,cuenta,clave,foto,estado,perfil_id FROM usuarios ORDER BY id ASC";
-echo $sql2;
 
 $tabla_cuerpo=$bd->sub_tuplas($sql2);
 ?>
@@ -126,9 +125,10 @@ function comprobar2() {
 	        if (Obj1.mensaje.substr(0,3)=="OK." || Obj1.mensaje.substr(0,6)!="ERROR:") {
 	          switch ($("#caso").val()) {
 	            case 'u': // Update
-	              var lestado = ($('#<?php echo $value["Id"]; ?>').val()==1?'Activo':'Inactivo');
-	              var checked_estado = ($('#<?php echo $value["Id"]; ?>').val()==1?'checked="checked"':'');
-	              var estado = $('#<?php echo $value["Id"]; ?>').val();
+	              var lestado = ($('#estado').val()==1?'Activo':'Inactivo');
+	              var lestado2 = ($('#estado').val()==1?'A':'I');
+	              var checked_estado = ($('#estado').val()==1?'checked="checked"':'');
+	              var estado = $('#estado').val();
 	              t.row($("#row_crud").val()).data(new Array(
 	              <?php
 	              foreach ($tabla as $key => $value) {	 # Genera JavaScript
@@ -147,9 +147,9 @@ function comprobar2() {
 			              if ($value["Id"]=="estado") {
 			              	?>
 							'<div class="custom-control custom-switch">'+
-							'<label title="+lestado+">'+
-							'<input type="checkbox" class="custom-control-input" value="'+estado+'" id="'+estado+'-t" disabled checked_estado>'+
-	              			'<label id="label_'+estado+'-t" class="custom-control-label" for="<?php echo $value['Id']; ?>">'+lestado+'</label>'+
+							'<label title="'+lestado+'">'+
+							'<input type="checkbox" class="custom-control-input" value="'+estado+'" id="'+estado+'-t" disabled '+checked_estado+'>'+
+	              			'<label id="label_'+estado+'-t" class="custom-control-label" for="<?php echo $value['Id']; ?>">'+lestado2+'</label>'+
 	              			'</label>'+
 	              			'</div>',
 							<?php
@@ -254,7 +254,7 @@ function adicionar() {
 }
 function editar(id_ref,id_tr) {
 	// Adicionar un registro
-	alert(id_tr);
+	//alert(id_tr);
 	$("#"+id_tr).addClass('selected');
     yy=id_tr.split("-");  // En PHP:   explode
     //alert(yy[1]);
@@ -268,7 +268,7 @@ function editar(id_ref,id_tr) {
 		id: id_ref
 	},
 	function(data, status) {	// CallBack
-		alert("Data: " + data + "\nStatus: " + status);
+		// alert("Data: " + data + "\nStatus: " + status);
 		var Obj1 = JSON.parse(data);
 		// alert(Obj1.titulo);
 		<?php

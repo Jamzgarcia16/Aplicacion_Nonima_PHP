@@ -96,10 +96,10 @@ class subase extends base
 	{
 		parent::__construct($server,$user,$clave,$based,$puerto,$tipo_coneccion);
 	}
-	function sub_fila($query) {	# Retorna una fila de datos
+	function sub_fila($query,$tipo_indice="A") {	# Retorna una fila de datos
 		if (!empty($query)) {
 			if ($this->consulta($query)) {
-				return($this->trae_fila());
+				return($this->trae_fila($tipo_indice));
 			} else {
 				return null;
 			}
@@ -107,11 +107,11 @@ class subase extends base
 			return null;
 		}
 	}
-	function sub_tuplas($query) { # Retorna todas las filas de datos
+	function sub_tuplas($query,$tipo_indice="A") { # Retorna todas las filas de datos
 		if (!empty($query)) {
 			if ($this->consulta($query)) {
 				$tabla = array();
-				while ($fila = $this->trae_fila()) {
+				while ($fila = $this->trae_fila($tipo_indice)) {
 					# Agrega la fila a la tabla
 					$tabla[] = $fila;
 				}
